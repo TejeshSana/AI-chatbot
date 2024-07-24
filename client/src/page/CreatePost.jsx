@@ -28,47 +28,62 @@ const CreatePost = () => {
     if (form.prompt) {
       try {
         setGeneratingImg(true);
+  
+        // Make a request to the OpenAI API
         const response = await fetch('http://localhost:8080/api/v1/dalle', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
           },
-          body: JSON.stringify({
-            prompt: form.prompt,
-          }),
+          body: JSON.stringify({prompt : form.prompt}),
         });
-
+        
+  
+        // Check if the response is successful
+        // if (!response.ok) {
+        //   const errorText = await response.text();
+        //   throw new Error(`HTTP error! Status: ${response.status}. Details: ${errorText}`);
+        // }
+  
+        // Parse the response and update the form state
         const data = await response.json();
         setForm({ ...form, photo: `data:image/jpeg;base64,${data.photo}` });
       } catch (err) {
-        alert(err);
+        alert(`Error generating image: ${err.message}`);
       } finally {
         setGeneratingImg(false);
       }
     } else {
-      alert('Please provide proper prompt');
+      alert('Please provide a valid prompt');
     }
   };
-
+  
+  
+  
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+  
     if (form.prompt && form.photo) {
       setLoading(true);
       try {
-        const response = await fetch('http://localhost:8080/api/v1/post', {
+        const response = await fetch('http://localhost:3000/api/v1/post', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
           },
           body: JSON.stringify({ ...form }),
         });
-
+  
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+  
         await response.json();
         alert('Success');
         navigate('/');
       } catch (err) {
-        alert(err);
+        console.error("Error submitting form:", err);
+        alert(err.message);
       } finally {
         setLoading(false);
       }
@@ -76,6 +91,7 @@ const CreatePost = () => {
       alert('Please generate an image with proper details');
     }
   };
+  
 
   return (
     <section className="max-w-7xl mx-auto">
