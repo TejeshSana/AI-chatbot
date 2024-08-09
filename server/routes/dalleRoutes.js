@@ -6,11 +6,12 @@ dotenv.config();
 
 const router = express.Router();
 
-router.route('/').get((req, res) => {
-  res.status(200).json({ message: 'Hello from DALLE!' });
-});
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
+});
+
+router.route('/').get((req, res) => {
+  res.status(200).json({ message: 'Hello from DALLE!' });
 });
 
 router.route('/').post(async (req, res) => {

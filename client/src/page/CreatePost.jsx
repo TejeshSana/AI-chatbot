@@ -38,14 +38,7 @@ const CreatePost = () => {
           body: JSON.stringify({prompt : form.prompt}),
         });
         
-  
-        // Check if the response is successful
-        // if (!response.ok) {
-        //   const errorText = await response.text();
-        //   throw new Error(`HTTP error! Status: ${response.status}. Details: ${errorText}`);
-        // }
-  
-        // Parse the response and update the form state
+        console.log(response);
         const data = await response.json();
         setForm({ ...form, photo: `data:image/jpeg;base64,${data.photo}` });
       } catch (err) {
